@@ -1,9 +1,10 @@
 package options
 
 import (
-	"github.com/spf13/pflag"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/pflag"
 )
 
 var kubePodTerminatorOptions = &KubePodTerminatorOptions{}
@@ -26,8 +27,6 @@ type KubePodTerminatorOptions struct {
 	KubeConfigPaths string
 	// Namespace is the namespace of the kube-pod-terminator run on
 	Namespace string
-	// TickerIntervalMinutes is the Interval of scheduled job to run
-	TickerIntervalMinutes int32
 	// ChannelCapacity is the capacity for concurrency
 	ChannelCapacity int
 	// GracePeriodSeconds is the grace period to delete pods
@@ -45,7 +44,6 @@ func (kpto *KubePodTerminatorOptions) addFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&kpto.KubeConfigPaths, "kubeConfigPaths", filepath.Join(os.Getenv("HOME"), ".kube", "config"),
 		"comma separated list of kubeconfig file paths to access with the cluster")
 	fs.StringVar(&kpto.Namespace, "namespace", "default", "Namespace to run on. Defaults to default namespace")
-	fs.Int32Var(&kpto.TickerIntervalMinutes, "tickerIntervalMinutes", 5, "Interval of scheduled job to run")
 	fs.IntVar(&kpto.ChannelCapacity, "channelCapacity", 10, "Channel capacity for concurrency")
 	fs.Int64Var(&kpto.GracePeriodSeconds, "gracePeriodSeconds", 30, "Grace period to delete pods")
 	fs.BoolVar(&kpto.TerminateEvicted, "terminateEvicted", true, "Terminate evicted pods in specified namespaces")

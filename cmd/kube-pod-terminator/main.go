@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/dimiro1/banner"
-	"go.uber.org/zap"
 	"io/ioutil"
 	"kube-pod-terminator/internal/k8s"
 	"kube-pod-terminator/internal/logging"
@@ -11,6 +9,9 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/dimiro1/banner"
+	"go.uber.org/zap"
 )
 
 var (
@@ -53,10 +54,7 @@ func main() {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(kpto.ContextTimeoutSeconds)*time.Second)
 			defer cancel()
 			k8s.Run(ctx, kpto.Namespace, clientSet, restConfig.Host)
-			ticker := time.NewTicker(time.Duration(kpto.TickerIntervalMinutes) * time.Minute)
-			for range ticker.C {
-				k8s.Run(ctx, kpto.Namespace, clientSet, restConfig.Host)
-			}
+			os.Exit(0)
 		}(path)
 	}
 

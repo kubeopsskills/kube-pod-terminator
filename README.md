@@ -15,8 +15,7 @@ On some Kubernetes versions, there is a problem that pods stuck in **Terminating
 connects to the **kube-apiserver**, discovers Terminating pods which are in **Terminating** status more than **--terminatingStateMinutes**
 minutes, which is defaults to 30 minutes.
 
-This tool also discovers pods which are at **Evicted** state if **--terminateEvicted** passed(enabled by default) and 
-clears them all on **--tickerIntervalMin** which defaults to 5 minutes.
+This tool also discovers pods which are at **Evicted** state if **--terminateEvicted** passed(enabled by default)
 
 Please note that **kube-pod-terminator** can work in Kubernetes cluster as Deployment, or outside of Kubernetes cluster as binary.
 Please refer to [Installation section](#installation) for more information.
@@ -29,7 +28,6 @@ via [sample deployment file](deployment/sample.yaml) or directly to the binary. 
 --inCluster                 bool        Specify if kube-pod-terminator is running in cluster. Defaults to true
 --kubeConfigPaths           string      Comma seperated list of kubeconfig files path to access clusters. Required while running out of Kubernetes cluster.
 --namespace                 string      Namespace to run on. Defaults to "default" namespace.
---tickerIntervalMin         int32       Kube-pod-terminator runs as scheduled job. This argument is the interval of scheduled job to run. Defaults to 5.
 --terminatingStateMinutes   int32       Terminate stucked pods in terminating state which are more than that value. Defaults to 30.
 --channelCapacity           int         Channel capacity for concurrency. Defaults to 10.
 --gracePeriodSeconds        int64       Grace period to delete pods. Defaults to 30.

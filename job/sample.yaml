@@ -1,13 +1,10 @@
 ---
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kube-pod-terminator-sa
   namespace: default
-
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -24,7 +21,6 @@ rules:
       - delete
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -40,20 +36,12 @@ subjects:
     namespace: default
 
 ---
-
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  labels:
-    app: kube-pod-terminator
   name: kube-pod-terminator
+  app: kube-pod-terminator
 spec:
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
-      app: kube-pod-terminator
-      deployment: kube-pod-terminator
   template:
     metadata:
       labels:
@@ -67,28 +55,9 @@ spec:
           args: [
               "--namespace", "default",
               "--tickerIntervalMin", "10",
-              "--inCluster=true",
-              "--kubeConfigPaths", "/opt/cluster1-config.yaml,/opt/cluster2-config.yaml,/opt/cluster3-config.yaml"
+              "--inCluster=true"
           ]
           imagePullPolicy: Always
           name: kube-pod-terminator
-          volumeMounts:
-            - name: cluster1-config
-              mountPath: /opt/cluster1-config.yaml
-              subPath: cluster1-config.yaml
-            - name: cluster2-config
-              mountPath: /opt/cluster2-config.yaml
-              subPath: cluster2-config.yaml
-            - name: cluster3-config
-              mountPath: /opt/cluster3-config.yaml
-              subPath: cluster3-config.yaml
-      volumes:
-        - name: cluster1-config
-          configMap:
-            name: cluster1-config
-        - name: cluster2-config
-          configMap:
-            name: cluster2-config
-        - name: cluster3-config
-          configMap:
-            name: cluster3-config
+      restartPolicy: Never
+  backoffLimit: 3
